@@ -2,8 +2,8 @@ from itertools import combinations
 
 # Données
 actions = [
-    ("Action-1", 20, 5),
-    ("Action-2", 30, 10),
+    ("action-1", 20, 5),
+    ("action-2", 30, 10),
     ('action-3', 50, 15),
     ('action-4', 70, 20),
     ('action-5', 60, 17),
@@ -51,5 +51,11 @@ def force_brute_optimisation(actions, budget_max):
 resultat, montant_depense = force_brute_optimisation(actions, budget_max)
 
 # Affichage du résultat
-print("Meilleure combinaison d'actions :", resultat)
-print("Montant total dépensé :", montant_depense, "euros")
+
+def display_result(list_result: list, amount:int | float) -> None:
+    print("Meilleure combinaison d'actions: ")
+    for actions in list_result:
+        print(f"{actions[0]} : prix de l'action : {actions[1]}€, rendement de l'action : {actions[2]}%")
+    print("Montant total dépensé :", amount, "euros")
+
+display_result(resultat, montant_depense)

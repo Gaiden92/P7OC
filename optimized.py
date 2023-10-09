@@ -39,12 +39,14 @@ def optimized_algo(actions, budget_max):
     return meilleure_combinaison, montant_depense
 
 # Exécution de l'algorithme glouton
-resultat_optimized, montant_depense_optimized = optimized_algo(actions, budget_max)
+resultat, montant_depense  = optimized_algo(actions, budget_max)
 
 # Affichage du résultat
-def display_result(list_result: list) -> None:
+def display_result(list_result: list, amount:int | float) -> None:
     print("Meilleure combinaison d'actions (algorithme optimisé) :")
-    resultat_optimized_sort_by_action_name = sorted(list(resultat_optimized), key=lambda a : int(a[0].removeprefix("action-")))
+    resultat_optimized_sort_by_action_name = sorted(list(list_result), key=lambda a : int(a[0].removeprefix("action-")))
     for actions in resultat_optimized_sort_by_action_name:
         print(f"{actions[0]} : prix de l'action : {actions[1]}€, rendement de l'action : {actions[2]}%")
-    print("Montant total dépensé (algorithme optimisé) :", montant_depense_optimized, "euros")
+    print("Montant total dépensé (algorithme optimisé) :", amount, "euros")
+
+display_result(resultat, montant_depense)
