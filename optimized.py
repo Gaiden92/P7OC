@@ -1,52 +1,70 @@
 # Données
 actions = [
-             ('action-1', 20, 5),
-             ('action-2', 30, 10), 
-             ('action-3', 50, 15), 
-             ('action-4', 70, 20), 
-             ('action-5', 60, 17), 
-             ('action-6', 80, 25), 
-             ('action-7', 22, 7),  
-             ('action-8', 26, 11), 
-             ('action-9', 48, 13), 
-             ('action-10',  34, 27), 
-             ('action-11',  42, 17), 
-             ('action-12',  110, 9), 
-             ('action-13',  38, 23), 
-             ('action-14',  14, 1), 
-             ('action-15',  18, 3),
-             ('action-16',  8, 8), 
-             ('action-17',  4, 12), 
-             ('action-18',  10, 14), 
-             ('action-19',  24, 21), 
-             ('action-20',  114, 18)
+            ('action-1', 20, 5),
+            ('action-2', 30, 10),
+            ('action-3', 50, 15),
+            ('action-4', 70, 20),
+            ('action-5', 60, 17),
+            ('action-6', 80, 25),
+            ('action-7', 22, 7),
+            ('action-8', 26, 11),
+            ('action-9', 48, 13),
+            ('action-10', 34, 27),
+            ('action-11', 42, 17),
+            ('action-12', 110, 9),
+            ('action-13', 38, 23),
+            ('action-14', 14, 1),
+            ('action-15', 18, 3),
+            ('action-16', 8, 8),
+            ('action-17', 4, 12),
+            ('action-18', 10, 14),
+            ('action-19', 24, 21),
+            ('action-20', 114, 18)
 
- ]
+]
 
 budget_max = 500
 
-def optimized_algo(actions, budget_max):
-    actions_triees = sorted(actions, key=lambda x: x[2], reverse=True)
+def algorithme_dynamique(actions: list, budget: int) -> tuple:
+    """Fonctions algorithmique permettant de retrouver la meilleure combinaison d'action par optimisation.
 
-    meilleure_combinaison = []
-    montant_depense = 0
+    Arguments:
+        actions -- une liste d'action.
+        budget -- un entier.
 
-    for action in actions_triees:
-        if montant_depense + action[1] <= budget_max:
-            meilleure_combinaison.append(action)
-            montant_depense += action[1]
+    Returns:
+        Un tupple contenant la liste des meilleurs actions, le profit réalisé et le coût total.
+    """
+    n = len(actions)
+    tableau = [[0] * (budget + 1) for _ in range(n + 1)]
 
-    return meilleure_combinaison, montant_depense
+    for i in range(1, n + 1):
+        for j in range(budget + 1):
+            nom, cout, profit = actions[i - 1]
 
-# Exécution de l'algorithme glouton
-resultat, montant_depense  = optimized_algo(actions, budget_max)
+            if cout > j:
+                tableau[i][j] = tableau[i - 1][j]
+            else:
+                tableau[i][j] = max(tableau[i - 1][j], tableau[i - 1][j - cout] + profit)
 
-# Affichage du résultat
-def display_result(list_result: list, amount:int | float) -> None:
-    print("Meilleure combinaison d'actions (algorithme optimisé) :")
-    resultat_optimized_sort_by_action_name = sorted(list(list_result), key=lambda a : int(a[0].removeprefix("action-")))
-    for actions in resultat_optimized_sort_by_action_name:
-        print(f"{actions[0]} : prix de l'action : {actions[1]}€, rendement de l'action : {actions[2]}%")
-    print("Montant total dépensé (algorithme optimisé) :", amount, "euros")
+    combinaison = []
+    j = budget
+    for i in range(n, 0, -1):
+        if tableau[i][j] != tableau[i - 1][j]:
+            nom, cout, profit = actions[i - 1]
+            combinaison.append((nom, cout, profit))
+            j -= cout
+    budget_total_depense = budget - j
 
-display_result(resultat, montant_depense)
+    return combinaison, tableau[n][budget], budget_total_depense
+
+
+# Convertir le rendement en pourcentage
+liste_actions_en_pourcentage = [(nom, cout, cout * rendement / 100) for nom, cout, rendement in actions]
+
+resultat, rendement_total, cout = algorithme_dynamique(liste_actions_en_pourcentage, 500)
+
+
+print("Meilleure combinaison :", resultat)
+print("Rendement total :", rendement_total, "€")
+print("Coût total :", cout, "€")

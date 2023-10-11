@@ -1,5 +1,3 @@
-from itertools import combinations
-
 # Données
 actions = [
     ("action-1", 20, 5),
@@ -11,51 +9,58 @@ actions = [
     ('action-7', 22, 7),
     ('action-8', 26, 11),
     ('action-9', 48, 13),
-    ('action-10',  34, 27),
-    ('action-11',  42, 17),
-    ('action-12',  110, 9),
-    ('action-13',  38, 23),
-    ('action-14',  14, 1),
-    ('action-15',  18, 3),
-    ('action-16',  8, 8),
-    ('action-17',  4, 12),
-    ('action-18',  10, 14),
-    ('action-19',  24, 21),
-    ('action-20',  114, 18),
+    ('action-10', 34, 27),
+    ('action-11', 42, 17),
+    ('action-12', 110, 9),
+    ('action-13', 38, 23),
+    ('action-14', 14, 1),
+    ('action-15', 18, 3),
+    ('action-16', 8, 8),
+    ('action-17', 4, 12),
+    ('action-18', 10, 14),
+    ('action-19', 24, 21),
+    ('action-20', 114, 18)
 ]
 
 budget_max = 500
 
-def force_brute_optimisation(actions, budget_max):
+# Algorithme Force brute (tester toute les combinaisons)
+def algorithme_force_brute(actions: list, budget: int) -> tuple:
+    """Fonctions algorithmique permettant de retrouver la meilleure combinaison d'action par force brute.
+
+    Arguments:
+        actions -- une liste d'action.
+        budget -- un entier.
+
+    Returns:
+        Un tupple contenant la liste des meilleurs actions, le profit réalisé et le coût total.
+    """
+    total_profit = 0
     meilleure_combinaison = None
-    meilleur_profit = 0
-    meilleure_depense = 0
 
-    # Génération de toutes les combinaisons possibles d'indices d'actions
-    for r in range(1, len(actions) + 1):
-        for combinaison_indices in combinations(range(len(actions)), r):
-            combinaison = [actions[i] for i in combinaison_indices]
-            somme_depensee = sum(action[1] for action in combinaison)
+    for i in range(2**len(actions)):
+        combinaison = []
+        cout_total = 0
+        profit = 0
 
-            if somme_depensee <= budget_max:
-                profit = sum(action[1] * action[2] / 100 for action in combinaison)
+        for j in range(len(actions)):
+            if (i >> j) & 1:
+                combinaison.append(actions[j])
+                cout_total += actions[j][1]
+                profit += actions[j][2]
 
-                if profit > meilleur_profit:
-                    meilleure_combinaison = combinaison
-                    meilleur_profit = profit
-                    meilleure_depense = somme_depensee
+        if cout_total <= budget and profit > total_profit:
+            total_depense = cout_total
+            total_profit = profit
+            meilleure_combinaison = combinaison
 
-    return meilleure_combinaison, meilleure_depense
+    return meilleure_combinaison, total_profit, total_depense
 
-# Exécution de l'algorithme
-resultat, montant_depense = force_brute_optimisation(actions, budget_max)
 
-# Affichage du résultat
+# Convertir le rendement en pourcentage
+liste_actions_en_pourcentage = [(nom, cout, cout * rendement / 100) for nom, cout, rendement in actions]
 
-def display_result(list_result: list, amount:int | float) -> None:
-    print("Meilleure combinaison d'actions: ")
-    for actions in list_result:
-        print(f"{actions[0]} : prix de l'action : {actions[1]}€, rendement de l'action : {actions[2]}%")
-    print("Montant total dépensé :", amount, "euros")
-
-display_result(resultat, montant_depense)
+resultat, profit, cout = algorithme_force_brute(liste_actions_en_pourcentage, budget_max)
+print("Meilleure combinaison :", resultat)
+print("Meilleur rendement :", profit, "€")
+print("Coût total :", cout, "€")
