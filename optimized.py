@@ -20,7 +20,6 @@ actions = [
             ('action-18', 10, 14),
             ('action-19', 24, 21),
             ('action-20', 114, 18)
-
 ]
 
 budget_max = 500
@@ -45,7 +44,7 @@ def algorithme_dynamique(actions: list, budget: int) -> tuple:
             if cout > j:
                 tableau[i][j] = tableau[i - 1][j]
             else:
-                tableau[i][j] = max(tableau[i - 1][j], tableau[i - 1][j - cout] + profit)
+                tableau[i][j] = max(tableau[i - 1][j], tableau[i - 1][round(j - cout)] + profit)
 
     combinaison = []
     j = budget
@@ -53,18 +52,9 @@ def algorithme_dynamique(actions: list, budget: int) -> tuple:
         if tableau[i][j] != tableau[i - 1][j]:
             nom, cout, profit = actions[i - 1]
             combinaison.append((nom, cout, profit))
-            j -= cout
-    budget_total_depense = budget - j
+            cout_reel = j-cout
+            j = round(j - cout)
+
+    budget_total_depense = budget - cout_reel
 
     return combinaison, tableau[n][budget], budget_total_depense
-
-
-# Convertir le rendement en pourcentage
-liste_actions_en_pourcentage = [(nom, cout, cout * rendement / 100) for nom, cout, rendement in actions]
-
-resultat, rendement_total, cout = algorithme_dynamique(liste_actions_en_pourcentage, 500)
-
-
-print("Meilleure combinaison :", resultat)
-print("Rendement total :", rendement_total, "€")
-print("Coût total :", cout, "€")

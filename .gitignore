@@ -1,5 +1,12 @@
 # Environnement virtuel
 /env
 
+# data
+/data
+
+# pycache
+/__pycache__
+
 #requirement
 requirements.txt
+

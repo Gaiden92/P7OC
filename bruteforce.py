@@ -55,12 +55,3 @@ def algorithme_force_brute(actions: list, budget: int) -> tuple:
             meilleure_combinaison = combinaison
 
     return meilleure_combinaison, total_profit, total_depense
-
-
-# Convertir le rendement en pourcentage
-liste_actions_en_pourcentage = [(nom, cout, cout * rendement / 100) for nom, cout, rendement in actions]
-
-resultat, profit, cout = algorithme_force_brute(liste_actions_en_pourcentage, budget_max)
-print("Meilleure combinaison :", resultat)
-print("Meilleur rendement :", profit, "€")
-print("Coût total :", cout, "€")
