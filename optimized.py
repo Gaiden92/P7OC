@@ -35,6 +35,7 @@ def algorithme_dynamique(budget: int, actions: list) -> tuple:
     Returns:
         Un tupple contenant la liste des meilleurs actions et le profit réalisé.
     """
+    budget *= 100
     n = len(actions)
     tableau = [[0] * (budget + 1) for _ in range(n + 1)]
 
@@ -46,7 +47,7 @@ def algorithme_dynamique(budget: int, actions: list) -> tuple:
                 tableau[i][j] = tableau[i - 1][j]
             else:
                 tableau[i][j] = max(
-                    tableau[i - 1][j], tableau[i - 1][round(j - cout)] + profit
+                    tableau[i - 1][j], tableau[i - 1][j - cout] + profit
                 )
 
     combinaison = []
@@ -56,6 +57,6 @@ def algorithme_dynamique(budget: int, actions: list) -> tuple:
             nom, cout, profit = actions[i - 1]
             combinaison.append((nom, cout, profit))
 
-            j = round(j - cout)
+            j -= cout
 
     return tableau[n][budget], sorted(combinaison, key=lambda x: x[0])
