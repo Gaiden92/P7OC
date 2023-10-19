@@ -1,3 +1,5 @@
+from time import time
+
 # Données
 actions = [
     ("action-1", 20, 5),
@@ -26,16 +28,18 @@ budget_max = 500
 
 
 def algorithme_dynamique(budget: int, actions: list) -> tuple:
-    """Fonctions algorithmique permettant de retrouver la meilleure combinaison d'action par optimisation.
+    """Fonctions algorithmique permettant de retrouver la meilleure
+    combinaison d'action par optimisation.
 
     Arguments:
         actions -- une liste d'action.
         budget -- un entier.
 
     Returns:
-        Un tupple contenant la liste des meilleurs actions et le profit réalisé.
+        Un tupple contenant la liste des meilleurs actions et
+        le profit réalisé.
     """
-    budget *= 100
+    start_time = time()
     n = len(actions)
     tableau = [[0] * (budget + 1) for _ in range(n + 1)]
 
@@ -58,5 +62,5 @@ def algorithme_dynamique(budget: int, actions: list) -> tuple:
             combinaison.append((nom, cout, profit))
 
             j -= cout
-
-    return tableau[n][budget], sorted(combinaison, key=lambda x: x[0])
+    print("Temps écoulé :", round(time() - start_time, 2), "secondes")
+    return tableau[n][budget], combinaison
