@@ -1,6 +1,8 @@
 import pandas as pd
 import tableprint as tp
+import matplotlib.pyplot as plt
 
+from time import time
 
 from optimized import algorithme_dynamique, actions
 from bruteforce import algorithme_force_brute
@@ -52,7 +54,7 @@ def display_result(tuple, float_in_data=False) -> None:
         float_in_data -- bool
         True : Si les données contiennent un float (default: {False})
     """
-    print(tuple)
+
     division = 100 if float_in_data else 1
     total_profit, liste_combinaisons = tuple
     liste_combinaisons_trier = sorted(liste_combinaisons, key=lambda x: x[0])
@@ -88,12 +90,39 @@ def display_result(tuple, float_in_data=False) -> None:
     print(bottom)
     print("Profit total réalisé :", round(total_profit / division, 2), "€")
     print("Coût total :", round(total_budget_utiliser / division, 2), "€")
+    
 
 def verifSienna(list, file):
     for element in list:
         for i in range(0,len(file)):
             if element in file[i]:
                 print(file[i])
+
+# Fonction pour exécuter et mesurer le temps
+def time_mesure(budget, actions, type_algorithme):
+    start_time = time()
+    _, _ = type_algorithme(budget, actions)
+    elapsed_time = time() - start_time
+    return elapsed_time, len(actions)
+
+def generer_diagramme(liste_actions: list, type_algorithme):
+    # Collecte des données pour le graphique
+    temps_ecoule = []
+    donnees_traitees = []
+
+    for i in range(1, len(liste_actions) + 1):
+        subset_actions = liste_actions[:i]
+        temps, donnees = time_mesure(500, subset_actions, type_algorithme)
+        temps_ecoule.append(temps)
+        donnees_traitees.append(donnees)
+
+    # Création du diagramme
+    plt.plot(donnees_traitees, temps_ecoule, marker='o', linestyle='-', color='b')
+    plt.title("Temps écoulé en fonction du nombre de données traitées")
+    plt.xlabel("Nombre de données traitées")
+    plt.ylabel("Temps écoulé (secondes)")
+    plt.grid(True)
+    plt.show()
 
 def main():
     MAX_BUDGET = 500
@@ -124,8 +153,10 @@ def main():
                     "Share-ROOM"
                 ]
     
-    # display_result(algorithme_dynamique(MAX_BUDGET * 100, data1), float_in_data=True)
-    # display_result(algorithme_dynamique(MAX_BUDGET * 100, data2), float_in_data=True)
+    generer_diagramme(actions, algorithme_dynamique)
+
+
+
 
 
 if __name__ == "__main__":  

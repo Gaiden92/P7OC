@@ -39,7 +39,6 @@ def algorithme_dynamique(budget: int, actions: list) -> tuple:
         Un tupple contenant la liste des meilleurs actions et
         le profit réalisé.
     """
-    start_time = time()
     n = len(actions)
     tableau = [[0] * (budget + 1) for _ in range(n + 1)]
 
@@ -54,13 +53,14 @@ def algorithme_dynamique(budget: int, actions: list) -> tuple:
                     tableau[i - 1][j], tableau[i - 1][j - cout] + profit
                 )
 
+
     combinaison = []
     j = budget
+    
     for i in range(n, 0, -1):
         if tableau[i][j] != tableau[i - 1][j]:
             nom, cout, profit = actions[i - 1]
             combinaison.append((nom, cout, profit))
 
             j -= cout
-    print("Temps écoulé :", round(time() - start_time, 2), "secondes")
     return tableau[n][budget], combinaison

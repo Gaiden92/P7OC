@@ -1,3 +1,4 @@
+from time import time
 # Données
 actions = [
     ("action-1", 20, 5),
@@ -35,9 +36,10 @@ def algorithme_force_brute(budget: int, actions: list, actions_selection=[]) -> 
     Returns:
         Un tupple contenant la liste des meilleurs actions
         et le profit réalisé.
-    """
+    """    
     if actions:
-        val1, listVal1 = algorithme_force_brute(
+
+        val1, listVal1  = algorithme_force_brute(
                                                 budget, actions[1:],
                                                 actions_selection
                                                 )
