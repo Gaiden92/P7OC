@@ -172,7 +172,7 @@ def main():
     data1 = createData(DATA_FILE_1)
     data2 = createData(DATA_FILE_2)
 
-    df = pd.read_csv(DATA_FILE_2)
+    df = pd.read_csv(DATA_FILE_1)
     df_zero_filter = (df["price"] <= 0) | (df["profit"] <= 0)
     df_zero = df[df_zero_filter] 
     df["data_issue"] = df_zero_filter
@@ -182,8 +182,9 @@ def main():
     fig, ax = plt.subplots()
     explode = (0, 0.1)
     ax.pie(sizes, labels=labels, autopct='%1.1f%%',
+       shadow=True, startangle=30,
        pctdistance=1.25, labeldistance=.6, explode= explode)
-    plt.title("Partition des données des data 2")
+    plt.title("Partition des données des data 1")
     plt.show()
 
 if __name__ == "__main__":  
