@@ -36,7 +36,8 @@ def algorithme_force_brute(budget: int, actions: list, actions_selection=[]) -> 
     Returns:
         Un tupple contenant la liste des meilleurs actions
         et le profit réalisé.
-    """    
+    """ 
+
     if actions:
 
         val1, listVal1  = algorithme_force_brute(
@@ -55,6 +56,7 @@ def algorithme_force_brute(budget: int, actions: list, actions_selection=[]) -> 
 
         return val1, listVal1
     else:
+
         return sum(
                     [i[2] for i in actions_selection]
                     ), sorted(

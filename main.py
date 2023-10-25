@@ -98,31 +98,77 @@ def verifSienna(list, file):
             if element in file[i]:
                 print(file[i])
 
-# Fonction pour exécuter et mesurer le temps
-def time_mesure(budget, actions, type_algorithme):
-    start_time = time()
-    _, _ = type_algorithme(budget, actions)
-    elapsed_time = time() - start_time
-    return elapsed_time, len(actions)
+def afficher_temps_algorithme(temps: float) -> None:
+    """Affiche le temps écoulé d'un algorithme donnée.
 
-def generer_diagramme(liste_actions: list, type_algorithme):
+    Arguments:
+        budget -- int: budget
+        list_actions -- list: la liste des actions
+        algorithme -- fonction: l'algorithme à mesurer
+    """
+
+    print("Temps total : ", round(temps, 3), "secondes écoulées")
+
+# Fonction pour exécuter et mesurer le temps
+def mesure_du_temps(budget: int, actions: list, type_algorithme: tuple) -> tuple:
+    """Calcule le temps écoulé d'un algorithme donnée.
+
+    Arguments:
+        budget -- int: budget
+        list_actions -- list: la liste des actions
+        algorithme -- tupple: l'algorithme à mesurer
+    """
+    lancement_timer = time()
+    _, _ = type_algorithme(budget, actions)
+    temps_total = time() - lancement_timer
+
+    return temps_total, len(actions)
+
+def generer_diagramme(budget, liste_actions: list, type_algorithme: tuple, style_de_ligne: str, couleur: str, label: str) -> list:
+    """Génère un diagramme.
+
+    Arguments:
+        budget -- int: un budget pour l'achat d'actions
+        liste_actions -- list: une liste d'actions
+        type_algorithme -- tuple: l'algorithme à afficher
+        style_de_ligne -- str: un style de ligne pour le diagramme
+        couleur -- str: une couleur pour le diagramme
+        label -- str: une légende pour le diagramme
+
+    Returns:
+        list: la liste des données pour les afficher sous forme de diagramme.
+    """
+
     # Collecte des données pour le graphique
     temps_ecoule = []
     donnees_traitees = []
 
     for i in range(1, len(liste_actions) + 1):
-        subset_actions = liste_actions[:i]
-        temps, donnees = time_mesure(500, subset_actions, type_algorithme)
+        sous_ensemble_actions = liste_actions[:i]
+        temps, donnees = mesure_du_temps(budget, sous_ensemble_actions, type_algorithme)
         temps_ecoule.append(temps)
         donnees_traitees.append(donnees)
 
+    return  plt.plot(
+                donnees_traitees,
+                temps_ecoule,
+                marker='o',
+                linestyle=style_de_ligne,
+                color=couleur,
+                label=label
+             )
+
+def afficher_diagramme() -> None:
+    """Permet d'afficher un diagramme à partir des données enregistrées.
+    """
     # Création du diagramme
-    plt.plot(donnees_traitees, temps_ecoule, marker='o', linestyle='-', color='b')
     plt.title("Temps écoulé en fonction du nombre de données traitées")
     plt.xlabel("Nombre de données traitées")
     plt.ylabel("Temps écoulé (secondes)")
+    plt.legend()
     plt.grid(True)
     plt.show()
+
 
 def main():
     MAX_BUDGET = 500
@@ -152,10 +198,10 @@ def main():
                     "Share-XQII",
                     "Share-ROOM"
                 ]
-    
-    generer_diagramme(actions, algorithme_dynamique)
 
-
+    generer_diagramme(500, actions, algorithme_dynamique, "-", "blue", "Algorithme dynamique")
+    generer_diagramme(500, actions, algorithme_force_brute, "-", "red", "Algorithme brute force")
+    afficher_diagramme()
 
 
 
