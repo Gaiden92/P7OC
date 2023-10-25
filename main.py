@@ -92,12 +92,6 @@ def display_result(tuple, float_in_data=False) -> None:
     print("Coût total :", round(total_budget_utiliser / division, 2), "€")
     
 
-def verifSienna(list, file):
-    for element in list:
-        for i in range(0,len(file)):
-            if element in file[i]:
-                print(file[i])
-
 def afficher_temps_algorithme(temps: float) -> None:
     """Affiche le temps écoulé d'un algorithme donnée.
 
@@ -178,32 +172,19 @@ def main():
     data1 = createData(DATA_FILE_1)
     data2 = createData(DATA_FILE_2)
 
-    sienna_results = [  
-                    "Share-ECAQ",
-                    "Share-IXCI",
-                    "Share-FWBE",
-                    "Share-ZOFA",
-                    "Share-PLLK",
-                    "Share-YFVZ",
-                    "Share-ANFX",
-                    "Share-PATS",
-                    "Share-NDKR",
-                    "Share-ALIY",
-                    "Share-JWGF",
-                    "Share-JGTW",
-                    "Share-FAPS",
-                    "Share-VCAX",
-                    "Share-LFXB",
-                    "Share-DWSK",
-                    "Share-XQII",
-                    "Share-ROOM"
-                ]
-
-    generer_diagramme(500, actions, algorithme_dynamique, "-", "blue", "Algorithme dynamique")
-    generer_diagramme(500, actions, algorithme_force_brute, "-", "red", "Algorithme brute force")
-    afficher_diagramme()
-
-
+    df = pd.read_csv(DATA_FILE_2)
+    df_zero_filter = (df["price"] <= 0) | (df["profit"] <= 0)
+    df_zero = df[df_zero_filter] 
+    df["data_issue"] = df_zero_filter
+    
+    sizes = df.groupby("data_issue")["name"].count().tolist()
+    labels = ["> 0", "< 0"]
+    fig, ax = plt.subplots()
+    explode = (0, 0.1)
+    ax.pie(sizes, labels=labels, autopct='%1.1f%%',
+       pctdistance=1.25, labeldistance=.6, explode= explode)
+    plt.title("Partition des données des data 2")
+    plt.show()
 
 if __name__ == "__main__":  
     main()

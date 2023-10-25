@@ -36,8 +36,8 @@ def algorithme_dynamique(budget: int, actions: list) -> tuple:
         budget -- un entier.
 
     Returns:
-        Un tupple contenant la liste des meilleurs actions et
-        le profit réalisé.
+        Un tupple contenant le profit réalisé et la liste des meilleurs actions
+        .
     """
 
     n = len(actions)
