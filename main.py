@@ -1,14 +1,37 @@
 import pandas as pd
 import tableprint as tp
-import matplotlib.pyplot as plt
 
 from time import time
 
-from optimized import algorithme_dynamique, actions
+from optimized import algorithme_dynamique
 from bruteforce import algorithme_force_brute
 
+# 1er fichier de données (20 actions)
+actions = [
+    ("action-1", 20, 5),
+    ("action-2", 30, 10),
+    ("action-3", 50, 15),
+    ("action-4", 70, 20),
+    ("action-5", 60, 17),
+    ("action-6", 80, 25),
+    ("action-7", 22, 7),
+    ("action-8", 26, 11),
+    ("action-9", 48, 13),
+    ("action-10", 34, 27),
+    ("action-11", 42, 17),
+    ("action-12", 110, 9),
+    ("action-13", 38, 23),
+    ("action-14", 14, 1),
+    ("action-15", 18, 3),
+    ("action-16", 8, 8),
+    ("action-17", 4, 12),
+    ("action-18", 10, 14),
+    ("action-19", 24, 21),
+    ("action-20", 114, 18),
+]
 
-# Fichier de donnée
+
+# Fichier de donnée csv (1000 actions)
 def createData(file: str) -> list:
     """Génère un filtrage des données à partir d'un fichier CSV.
 
@@ -46,7 +69,7 @@ def display_result(tuple, float_in_data=False) -> None:
     """Affiche les résultats de l'algorithme de force brute
     ou de l'algorithme optimisé.
 
-    Arguments:  
+    Arguments:
         tuple -- Un tuple contenant la liste des meilleurs
         combinaisons et le profit total réalisé.
 
@@ -90,21 +113,10 @@ def display_result(tuple, float_in_data=False) -> None:
     print(bottom)
     print("Profit total réalisé :", round(total_profit / division, 2), "€")
     print("Coût total :", round(total_budget_utiliser / division, 2), "€")
-    
 
-def afficher_temps_algorithme(temps: float) -> None:
-    """Affiche le temps écoulé d'un algorithme donnée.
-
-    Arguments:
-        budget -- int: budget
-        list_actions -- list: la liste des actions
-        algorithme -- fonction: l'algorithme à mesurer
-    """
-
-    print("Temps total : ", round(temps, 3), "secondes écoulées")
 
 # Fonction pour exécuter et mesurer le temps
-def mesure_du_temps(budget: int, actions: list, type_algorithme: tuple) -> tuple:
+def mesure_du_temps(budget: int, actions: list, algorithme: tuple) -> tuple:
     """Calcule le temps écoulé d'un algorithme donnée.
 
     Arguments:
@@ -113,55 +125,10 @@ def mesure_du_temps(budget: int, actions: list, type_algorithme: tuple) -> tuple
         algorithme -- tupple: l'algorithme à mesurer
     """
     lancement_timer = time()
-    _, _ = type_algorithme(budget, actions)
+    _, _ = algorithme(budget, actions)
     temps_total = time() - lancement_timer
 
-    return temps_total, len(actions)
-
-def generer_diagramme(budget, liste_actions: list, type_algorithme: tuple, style_de_ligne: str, couleur: str, label: str) -> list:
-    """Génère un diagramme.
-
-    Arguments:
-        budget -- int: un budget pour l'achat d'actions
-        liste_actions -- list: une liste d'actions
-        type_algorithme -- tuple: l'algorithme à afficher
-        style_de_ligne -- str: un style de ligne pour le diagramme
-        couleur -- str: une couleur pour le diagramme
-        label -- str: une légende pour le diagramme
-
-    Returns:
-        list: la liste des données pour les afficher sous forme de diagramme.
-    """
-
-    # Collecte des données pour le graphique
-    temps_ecoule = []
-    donnees_traitees = []
-
-    for i in range(1, len(liste_actions) + 1):
-        sous_ensemble_actions = liste_actions[:i]
-        temps, donnees = mesure_du_temps(budget, sous_ensemble_actions, type_algorithme)
-        temps_ecoule.append(temps)
-        donnees_traitees.append(donnees)
-
-    return  plt.plot(
-                donnees_traitees,
-                temps_ecoule,
-                marker='o',
-                linestyle=style_de_ligne,
-                color=couleur,
-                label=label
-             )
-
-def afficher_diagramme() -> None:
-    """Permet d'afficher un diagramme à partir des données enregistrées.
-    """
-    # Création du diagramme
-    plt.title("Temps écoulé en fonction du nombre de données traitées")
-    plt.xlabel("Nombre de données traitées")
-    plt.ylabel("Temps écoulé (secondes)")
-    plt.legend()
-    plt.grid(True)
-    plt.show()
+    return round(temps_total, 3), len(actions)
 
 
 def main():
@@ -172,20 +139,12 @@ def main():
     data1 = createData(DATA_FILE_1)
     data2 = createData(DATA_FILE_2)
 
-    df = pd.read_csv(DATA_FILE_1)
-    df_zero_filter = (df["price"] <= 0) | (df["profit"] <= 0)
-    df_zero = df[df_zero_filter] 
-    df["data_issue"] = df_zero_filter
-    
-    sizes = df.groupby("data_issue")["name"].count().tolist()
-    labels = ["> 0", "< 0"]
-    fig, ax = plt.subplots()
-    explode = (0, 0.1)
-    ax.pie(sizes, labels=labels, autopct='%1.1f%%',
-       shadow=True, startangle=30,
-       pctdistance=1.25, labeldistance=.6, explode= explode)
-    plt.title("Partition des données des data 1")
-    plt.show()
+    display_result(algorithme_dynamique(MAX_BUDGET, actions))
+    display_result(algorithme_force_brute(MAX_BUDGET, actions))
 
-if __name__ == "__main__":  
+    display_result(algorithme_dynamique(MAX_BUDGET*100, data1), True)
+    display_result(algorithme_dynamique(MAX_BUDGET*100, data2), True)
+
+
+if __name__ == "__main__":
     main()
