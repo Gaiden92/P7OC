@@ -139,10 +139,24 @@ def main():
     data1 = createData(DATA_FILE_1)
     data2 = createData(DATA_FILE_2)
 
+    separator = "="*100
+
+    print("Résultats algorithme optimisé pour 20 actions")
     display_result(algorithme_dynamique(MAX_BUDGET, actions))
+    
+    print(separator)
+    
+    print("Résultats algorithme de force brute pour 20 actions")
     display_result(algorithme_force_brute(MAX_BUDGET, actions))
 
+    print(separator)
+
+    print("Résultats algorithme optimisé pour le fichier de data n°1")
     display_result(algorithme_dynamique(MAX_BUDGET*100, data1), True)
+    
+    print(separator)
+
+    print("Résultats algorithme optimisé pour le fichier de data n°2")
     display_result(algorithme_dynamique(MAX_BUDGET*100, data2), True)
 
 
