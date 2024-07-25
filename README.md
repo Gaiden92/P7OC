@@ -37,7 +37,6 @@ Décomposer des problèmes complexes et créer des algorithmes efficaces pour co
 
 ### Créer l'environnement virtuel
 
-- `cd P2OC`
 - `python -m venv env`
 - Activer l'environnement `source env/bin/activate` (macOS and Linux) ou `env\Scripts\activate` (Windows)
     
